@@ -8,12 +8,10 @@ vars = details[1]
 
 clauses = filereading.get_clauses(cnf_file)
 
-print("Found clauses: ", clauses)
+print("Found clauses:", clauses)
 print()
 
 preoptimized_clauses = preoptimizer.pre_optimizer(clauses, vars)
-print("Pre-optimized clauses: ", preoptimized_clauses)
-print()
 
 pre_CDCL_clauses = preoptimizer.recursive_contradiction_optimizer(preoptimized_clauses)
-print("Final pre-CDCL result", pre_CDCL_clauses)
+print("Final pre-CDCL result:", pre_CDCL_clauses)
