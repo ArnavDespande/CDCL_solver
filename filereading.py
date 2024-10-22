@@ -15,5 +15,6 @@ def get_clauses(file):
     for line in file:
         if line.strip().endswith("0"):
             cleaning = line.split()
+            cleaning = [int(item) for item in cleaning]
             clauses.append(cleaning[:-1])
     return clauses
