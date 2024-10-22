@@ -15,4 +15,5 @@ preoptimized_clauses = preoptimizer.pre_optimizer(clauses, vars)
 print("Pre-optimized clauses: ", preoptimized_clauses)
 print()
 
-preoptimizer.initial_contradiction_check(preoptimized_clauses)
+pre_CDCL_clauses = preoptimizer.recursive_contradiction_optimizer(preoptimized_clauses)
+print("Final pre-CDCL result", pre_CDCL_clauses)
