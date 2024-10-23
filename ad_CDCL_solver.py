@@ -1,17 +1,23 @@
-import filereading
+import file_reading
 import preoptimizer
+import CDCL_algorithm
 
-cnf_file = filereading.read_file("C:/Users/arnav/Desktop/cnf.cnf")
 
-details = filereading.get_base_details(cnf_file)
-vars = details[1]
+cnf_file = file_reading.read_file("C:/Users/arnav/Desktop/cnf.cnf")
 
-clauses = filereading.get_clauses(cnf_file)
+details = file_reading.get_base_details(cnf_file)
+vars = details[0]
 
+clauses = file_reading.get_clauses(cnf_file)
 print("Found clauses:", clauses)
 print()
 
 preoptimized_clauses = preoptimizer.pre_optimizer(clauses, vars)
-
 pre_CDCL_clauses = preoptimizer.recursive_contradiction_optimizer(preoptimized_clauses)
-print("Final pre-CDCL result:", pre_CDCL_clauses)
+
+print("Optimized clauses: ", pre_CDCL_clauses)
+print()
+
+if (pre_CDCL_clauses != 'UNSATISFIABLE' and pre_CDCL_clauses != 'SATISFIABLE'):
+    robotic_result = CDCL_algorithm.solver(pre_CDCL_clauses, vars)
+print("Greedy result:", robotic_result)

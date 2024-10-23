@@ -22,8 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ad_CDCL_solver.py" />
+    <Compile Include="CDCL_algorithm.py" />
+    <Compile Include="CDCL_heuristics.py" />
     <Compile Include="clause_analysis.py" />
-    <Compile Include="filereading.py" />
+    <Compile Include="file_reading.py" />
     <Compile Include="preoptimizer.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
