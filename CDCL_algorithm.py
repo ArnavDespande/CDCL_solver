@@ -1,20 +1,8 @@
-import clause_analysis
-import CDCL_heuristics
 import preoptimizer
-import file_reading
 
 
 def solver(clauses, vars):
-
-    while (clauses != "SATISFIABLE" and clauses != "UNSATISFIABLE"):
-        value_to_use = CDCL_heuristics.most_common_value(clauses, vars)
-        print("Greedy value:", value_to_use)
-        print()
-        clauses = use_assigned_literal(clauses, value_to_use)
-        print("After using value:", clauses)
-        print()
-        clauses = solver_till_decision(clauses, value_to_use)
-    return clauses
+    pass
 
 
 def solver_till_decision(clauses, literal):
@@ -34,4 +22,6 @@ def use_assigned_literal(clauses, literal):
             clause.remove(-literal)
 
     clauses = [i for i in clauses if i not in clauses_made_true]
+    print("Clauses left:", clauses)
+    print()
     return clauses

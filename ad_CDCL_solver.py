@@ -20,4 +20,4 @@ print()
 
 if (pre_CDCL_clauses != 'UNSATISFIABLE' and pre_CDCL_clauses != 'SATISFIABLE'):
     robotic_result = CDCL_algorithm.solver(pre_CDCL_clauses, vars)
-print("Greedy result:", robotic_result)
+    print("Result:", robotic_result)

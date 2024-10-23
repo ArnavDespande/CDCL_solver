@@ -12,19 +12,21 @@ def commonality_searcher(clauses, values):
             else:
                 number_frequency[var-1][0] += 1
 
+    print("Frequencies: ", number_frequency)
+    print()
     return number_frequency
 
 
 def most_common_value(clauses, vars):
 
-    max_value = 0
+    max_value = 1
     is_negative = False
 
     values = commonality_searcher(clauses, vars)
 
     for value_pair in values:
         for value in value_pair:
-            if (value > max_value):
+            if (value >= max_value):
                 is_negative = False
                 max_value = values.index(value_pair)+1
                 if (value_pair.index(value) == 0):
@@ -34,15 +36,35 @@ def most_common_value(clauses, vars):
 
     return max_value
 
-'''
+
 def random_value(clauses, vars):
 
-    values = commonality_searcher(clauses, vars)
-
-    value_pair = random.choice(values)
-    value = random.choice(value_pair)
-    if (value != 0):
-        return -(values.index(value_pair)+1) if (value_pair.index(value) == 0) else (values.index(value_pair)+1)
+    value_pair = random.choice(vars)
+    value = random.choice([-1, 1])
+    if (value == 1):
+        output = -value_pair
     else:
-        return random_value(values, vars)
-'''
+        output = value_pair
+
+    for clause in clauses:
+        if output in clause:
+            return output
+    return random_value(clauses, vars)
+
+
+'''Use this function to check if you can further iterate; it returns a zero if you can't'''
+def iterative_value(clauses, vars, previous_value=None):
+
+    if (previous_value == None):
+        return 1
+
+    if abs(previous_value)+1 > vars:
+        return 0
+
+    for clause in clauses:
+        if (abs(previous_value)+1) in clause:
+            return abs(previous_value)+1
+        elif -(abs(previous_value)+1) in clause:
+            return -(abs(previous_value)+1)
+
+    return iterative_value(clauses, vars, abs(previous_value)+1)
