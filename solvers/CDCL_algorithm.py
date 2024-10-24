@@ -4,19 +4,28 @@ from utilities.CDCL_heuristics import *
 
 
 # Each node contains details of the previous decision
-def solver(clause_map, vars, node=None, passover=None):
+def solver(clause_map, vars, node=None, passover=None, ids=None):
 
+    if (ids == None):
+        ids = []
     literal_selected = random_value(clause_map, vars)
     if (passover is not None):
         print("Found passover from previous decision at", passover)
         literal_selected = passover
+    Id = ((int(node.id) if node is not None else 2) * literal_selected)
+    if (Id in ids):
+        print("You've been here before")
+        return False
+    else:
+        ids.append(Id)
+
     print("Decided on:", literal_selected)
     new_node = TrailNode(literal_selected, "DECISION", copy.deepcopy(clause_map), copy.deepcopy(node))
     clause_map1 = solver_till_decision(copy.deepcopy(clause_map), literal_selected)
 
     if (clause_map1 != False and clause_map1 != True):
         clause_map1.print_table()
-        return solver(copy.deepcopy(clause_map1), vars, copy.deepcopy(new_node), None)
+        return solver(copy.deepcopy(clause_map1), vars, copy.deepcopy(new_node), None, ids)
 
     elif (clause_map1):
         return True
@@ -24,13 +33,14 @@ def solver(clause_map, vars, node=None, passover=None):
     else:
         if (passover is None):
             print("Contradiction found, switching polarity")
-            return solver(copy.deepcopy(clause_map), vars, copy.deepcopy(node), -(new_node.value))
+            return solver(copy.deepcopy(clause_map), vars, copy.deepcopy(node), -(new_node.value), ids)
         else:
             print("Contradiction found, going up tree")
-            if (not(node is None and node.predecessor is None)):
+            if (node is not None):
                 print("Upper decision being used:", -(node.value))
-                return solver(copy.deepcopy(node.map_snapshot), vars, node.predecessor, -(node.value))
+                return solver(copy.deepcopy(node.map_snapshot), vars, node.predecessor, -(node.value), ids)
             else:
+                print("Can't go any higher")
                 return False
 
 
