@@ -1,5 +1,36 @@
-def solver(clauses, vars):
-    pass
+import copy
+from custom_types.Trail import TrailNode
+from utilities.CDCL_heuristics import *
+
+# Each node contains details of the previous decision
+def solver(original_map, clause_map, vars, previous_values, node=None):
+
+    if len(previous_values) > 0:
+        literal_selected = previous_values[0]
+        previous_values.remove(literal_selected)
+    else:
+        literal_selected = random_value(clause_map, vars)
+
+    new_node = TrailNode(literal_selected, "DECISION", clause_map, node)
+    clause_map = solver_till_decision(clause_map, literal_selected)
+
+    if (clause_map != False and clause_map != True):
+        print(clause_map.print_table())
+        print()
+        return solver(original_map, clause_map, vars, previous_values, new_node)
+
+    elif (clause_map):
+        return True
+
+    else:
+        final_node = new_node
+        full_stack = []
+        while(final_node is not None):
+            full_stack.insert(0, final_node.value)
+            final_node = final_node.predecessor
+        print(full_stack)
+        full_stack[-1] *= -1
+        return False
 
 
 def solver_till_decision(clauses, literal):
@@ -7,14 +38,16 @@ def solver_till_decision(clauses, literal):
     remainder = use_assigned_literal(clauses, literal)
     return recursive_non_eliminating_contradiction_optimizer(remainder)
 
+# Returns the clauses and the representative node
 def recursive_non_eliminating_contradiction_optimizer(clauses):
     
     singulars = singular_clause_detector(clauses)
-
     if (len(singulars) > 0):
         if (find_false_contradiction(clauses)):
             return False
-        clauses = use_assigned_literal(clauses, singulars[0][1])
+        if (find_full_truths(clauses)):
+            return True
+        clauses = use_assigned_literal(copy.deepcopy(clauses), singulars[0][1])
         print(singulars[0][1], ":Singular")
         clauses.print_table()
         print()
@@ -25,23 +58,28 @@ def recursive_non_eliminating_contradiction_optimizer(clauses):
                 return clauses
             elif (not clause.get_clause_value()):
                 clause.print_clause()
+                print()
                 return False
             else:
                 continue
         return True
 
+
 def use_assigned_literal(clauses, literal):
 
-    for clause in clauses.clauses:
+    clauses_copy = clauses
+
+    for clause in clauses_copy.clauses:
         for variable in clause.variables:
-            if abs(variable.tag) == abs(literal):
+            if (abs(variable.tag) == abs(literal) and not variable.assigned_status):
                 variable.assigned_status = True
                 if (variable.tag > 0 and literal > 0 or variable.tag < 0 and literal < 0):
                     variable.value = True
                 else:
                     variable.value = False
 
-    return clauses
+    return clauses_copy
+
 
 def singular_clause_detector(clauses):
 
@@ -66,6 +104,7 @@ def singular_clause_detector(clauses):
     # Returns a list of tuples, first tuple is a clause, second tuple is a single value of type Value
     return singular_clauses
 
+
 def find_false_contradiction(clauses):
 
     for clause in clauses.clauses:
@@ -73,3 +112,13 @@ def find_false_contradiction(clauses):
             clause.print_clause()
             return True
     return False
+
+
+def find_full_truths(clauses):
+
+    for clause in clauses.clauses:
+        if clause.get_clause_value() == False:
+            return False
+        elif clause.get_clause_value() == None:
+            return False
+    return True
