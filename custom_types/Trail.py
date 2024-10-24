@@ -1,9 +1,13 @@
+import uuid
+
+
 class TrailNode:
     def __init__ (self, value, reason, map_snapshot=None, predecessor=None):
         self.value = value
         self.reason = reason
         self.map_snapshot = map_snapshot
         self.predecessor = predecessor
+        self.id = uuid.uuid4()
 
     def affix(self, node):
         node.predecessor = self
