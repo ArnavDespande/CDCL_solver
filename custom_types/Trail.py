@@ -1,8 +1,16 @@
-class Trail:
-    def __init__ (self, value, reason, predecessor=None):
+class TrailNode:
+    def __init__ (self, value, reason, map_snapshot=None, predecessor=None):
         self.value = value
         self.reason = reason
+        self.map_snapshot = map_snapshot
         self.predecessor = predecessor
+
+    def affix(self, node):
+        node.predecessor = self
+
+    def printNode(self):
+        if (self.reason == "DECISION"):
+            print(self.value, " ", self.reason)
 
 
 def get_decision_level(trail_node):

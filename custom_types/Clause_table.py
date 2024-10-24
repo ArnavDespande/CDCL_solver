@@ -23,7 +23,7 @@ class Clause:
     def print_clause(self):
         for var in self.variables:
             print(var.tag, " ", var.value, " ", end="")
-            print()
+        print()
 
 class Clause_Table:
     def __init__ (self, clauses):
