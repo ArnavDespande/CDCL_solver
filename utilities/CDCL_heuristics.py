@@ -43,8 +43,6 @@ def random_value(clauses, vars):
         output = -value_pair
     else:
         output = value_pair
-    print(output)
-    print()
     for clause in clauses.clauses:
         for val in clause.variables:
             if abs(output) == abs(val.tag):
