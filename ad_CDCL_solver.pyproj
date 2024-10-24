@@ -22,12 +22,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ad_CDCL_solver.py" />
-    <Compile Include="CDCL_algorithm.py" />
-    <Compile Include="CDCL_heuristics.py" />
-    <Compile Include="clause_analysis.py" />
-    <Compile Include="file_reading.py" />
-    <Compile Include="preoptimizer.py" />
-    <Compile Include="Trail.py" />
+    <Compile Include="solvers\CDCL_algorithm.py" />
+    <Compile Include="utilities\CDCL_heuristics.py" />
+    <Compile Include="utilities\clause_analysis.py" />
+    <Compile Include="custom_types\Clause_table.py" />
+    <Compile Include="utilities\file_reading.py" />
+    <Compile Include="solvers\preoptimizer.py" />
+    <Compile Include="custom_types\Trail.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="custom_types\" />
+    <Folder Include="solvers\" />
+    <Folder Include="utilities\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
