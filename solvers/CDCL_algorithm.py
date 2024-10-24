@@ -1,47 +1,49 @@
 import copy
-from custom_types.Trail import TrailNode
+from custom_types.Trail import *
 from utilities.CDCL_heuristics import *
 
+
 # Each node contains details of the previous decision
-def solver(original_map, clause_map, vars, previous_values, node=None):
+def solver(clause_map, vars, node=None, passover=None):
 
-    if len(previous_values) > 0:
-        literal_selected = previous_values[0]
-        previous_values.remove(literal_selected)
-    else:
-        literal_selected = random_value(clause_map, vars)
+    literal_selected = random_value(clause_map, vars)
+    if (passover is not None):
+        print("Found passover from previous decision at", passover)
+        literal_selected = passover
+    print("Decided on:", literal_selected)
+    new_node = TrailNode(literal_selected, "DECISION", copy.deepcopy(clause_map), copy.deepcopy(node))
+    clause_map1 = solver_till_decision(copy.deepcopy(clause_map), literal_selected)
 
-    new_node = TrailNode(literal_selected, "DECISION", clause_map, node)
-    clause_map = solver_till_decision(clause_map, literal_selected)
+    if (clause_map1 != False and clause_map1 != True):
+        clause_map1.print_table()
+        return solver(copy.deepcopy(clause_map1), vars, copy.deepcopy(new_node), None)
 
-    if (clause_map != False and clause_map != True):
-        print(clause_map.print_table())
-        print()
-        return solver(original_map, clause_map, vars, previous_values, new_node)
-
-    elif (clause_map):
+    elif (clause_map1):
         return True
 
     else:
-        final_node = new_node
-        full_stack = []
-        while(final_node is not None):
-            full_stack.insert(0, final_node.value)
-            final_node = final_node.predecessor
-        print(full_stack)
-        full_stack[-1] *= -1
-        return False
+        if (passover is None):
+            print("Contradiction found, switching polarity")
+            return solver(copy.deepcopy(clause_map), vars, copy.deepcopy(node), -(new_node.value))
+        else:
+            print("Contradiction found, going up tree")
+            if (not(node is None and node.predecessor is None)):
+                print("Upper decision being used:", -(node.value))
+                return solver(copy.deepcopy(node.map_snapshot), vars, node.predecessor, -(node.value))
+            else:
+                return False
 
 
 def solver_till_decision(clauses, literal):
 
-    remainder = use_assigned_literal(clauses, literal)
-    return recursive_non_eliminating_contradiction_optimizer(remainder)
+    remainder = use_assigned_literal(copy.deepcopy(clauses), literal)
+    return recursive_non_eliminating_contradiction_optimizer(copy.deepcopy(remainder))
 
 # Returns the clauses and the representative node
 def recursive_non_eliminating_contradiction_optimizer(clauses):
     
     singulars = singular_clause_detector(clauses)
+
     if (len(singulars) > 0):
         if (find_false_contradiction(clauses)):
             return False
@@ -49,7 +51,6 @@ def recursive_non_eliminating_contradiction_optimizer(clauses):
             return True
         clauses = use_assigned_literal(copy.deepcopy(clauses), singulars[0][1])
         print(singulars[0][1], ":Singular")
-        clauses.print_table()
         print()
         return recursive_non_eliminating_contradiction_optimizer(clauses)
     else:
