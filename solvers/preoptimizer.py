@@ -9,8 +9,6 @@ def recursive_contradiction_optimizer(clauses):
         if (locate_contradiction(clauses) != False):
             return "UNSATISFIABLE"
         clauses = singularity_eliminator(clauses, int(singulars[0][0]))
-        print("After removing singulars:", clauses)
-        print()
         return recursive_contradiction_optimizer(clauses)
     else:
         if (clauses == []):

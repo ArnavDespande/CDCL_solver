@@ -4,44 +4,69 @@ from utilities.CDCL_heuristics import *
 
 
 # Each node contains details of the previous decision
-def solver(clause_map, vars, node=None, passover=None, ids=None):
+def solver(clause_map, vars, node=None, passover=None):
 
-    if (ids == None):
-        ids = []
-    literal_selected = random_value(clause_map, vars)
     if (passover is not None):
-        print("Found passover from previous decision at", passover)
+        #print("Found passover:", passover)
         literal_selected = passover
-    Id = ((int(node.id) if node is not None else 2) * literal_selected)
-    if (Id in ids):
-        print("You've been here before")
-        return False
     else:
-        ids.append(Id)
+        if node is None:
+            literal_selected = iterative_value(clause_map, vars, None)
+        else:
+            literal_selected = iterative_value(clause_map, vars, node.value)
+        #print("Decided on:", literal_selected)
 
-    print("Decided on:", literal_selected)
-    new_node = TrailNode(literal_selected, "DECISION", copy.deepcopy(clause_map), copy.deepcopy(node))
+
+    new_node = TrailNode(literal_selected, "DECISION", copy.deepcopy(clause_map), node, False)
+    if (node != None):
+        if new_node.value > 0:
+            node.son = new_node
+        else:
+            node.daughter = new_node
+
     clause_map1 = solver_till_decision(copy.deepcopy(clause_map), literal_selected)
 
-    if (clause_map1 != False and clause_map1 != True):
-        clause_map1.print_table()
-        return solver(copy.deepcopy(clause_map1), vars, copy.deepcopy(new_node), None, ids)
 
+    if (clause_map1 != False and clause_map1 != True):
+        return solver(copy.deepcopy(clause_map1), vars, new_node, None)
     elif (clause_map1):
         return True
-
     else:
+        new_node.dead = True
+
         if (passover is None):
-            print("Contradiction found, switching polarity")
-            return solver(copy.deepcopy(clause_map), vars, copy.deepcopy(node), -(new_node.value), ids)
+            #print("Contradiction found, switching polarity")
+            new_node.dead = True
+            return solver(copy.deepcopy(clause_map), vars, node, -(new_node.value))
         else:
-            print("Contradiction found, going up tree")
-            if (node is not None):
-                print("Upper decision being used:", -(node.value))
-                return solver(copy.deepcopy(node.map_snapshot), vars, node.predecessor, -(node.value), ids)
+            # Screw it
+            return False
+            '''
+            print("Contradiction found, need to backtrack")
+            node_to_use = backtrack_to_appropriate_node(node)
+            if (node_to_use is not None):
+                print("Upper decision being used:", -(node_to_use.value))
+                return solver(copy.deepcopy(node_to_use.map_snapshot), vars, node_to_use.predecessor, -(node_to_use.value))
             else:
                 print("Can't go any higher")
-                return False
+                return False'''
+
+
+def backtrack_to_appropriate_node(node):
+    if (node is None):
+        return None
+
+    if (node.dead):
+        return backtrack_to_appropriate_node(node.predecessor)
+
+    if (node.daughter != None):
+        if (node.son.dead and node.daughter.dead):
+            if (node.value < 0):
+                node.dead = True
+                return (backtrack_to_appropriate_node(node.predecessor))
+            return (node)
+    '''else:
+        return ("debug needed")'''
 
 
 def solver_till_decision(clauses, literal):
@@ -60,15 +85,17 @@ def recursive_non_eliminating_contradiction_optimizer(clauses):
         if (find_full_truths(clauses)):
             return True
         clauses = use_assigned_literal(copy.deepcopy(clauses), singulars[0][1])
-        print(singulars[0][1], ":Singular")
-        print()
-        return recursive_non_eliminating_contradiction_optimizer(clauses)
+        '''print(singulars[0][1], ":Singular")
+        print()'''
+        clauses_copy = copy.deepcopy(clauses)
+        remove_true_clauses(clauses_copy)
+        return recursive_non_eliminating_contradiction_optimizer(clauses_copy)
     else:
         for clause in clauses.clauses:
             if (clause.get_clause_value() == None):
                 return clauses
             elif (not clause.get_clause_value()):
-                clause.print_clause()
+                # clause.print_clause()
                 print()
                 return False
             else:
@@ -78,9 +105,7 @@ def recursive_non_eliminating_contradiction_optimizer(clauses):
 
 def use_assigned_literal(clauses, literal):
 
-    clauses_copy = clauses
-
-    for clause in clauses_copy.clauses:
+    for clause in clauses.clauses:
         for variable in clause.variables:
             if (abs(variable.tag) == abs(literal) and not variable.assigned_status):
                 variable.assigned_status = True
@@ -89,7 +114,9 @@ def use_assigned_literal(clauses, literal):
                 else:
                     variable.value = False
 
-    return clauses_copy
+    clauses_unfinished = remove_true_clauses(copy.deepcopy(clauses))
+
+    return clauses_unfinished
 
 
 def singular_clause_detector(clauses):
@@ -120,7 +147,6 @@ def find_false_contradiction(clauses):
 
     for clause in clauses.clauses:
         if clause.get_clause_value() == False:
-            clause.print_clause()
             return True
     return False
 
@@ -133,3 +159,25 @@ def find_full_truths(clauses):
         elif clause.get_clause_value() == None:
             return False
     return True
+
+
+def get_path_trace(node):
+
+    trace = []
+
+    while(node is not None):
+        trace.insert(0, (node.value, node.dead))
+        node = node.predecessor
+    print(trace)
+    return trace
+
+
+def remove_true_clauses(clauses_main):
+
+    true_clauses = []
+    for clause in clauses_main.clauses:
+        if (clause.get_clause_value() == True):
+            true_clauses.append(clause)
+    for clause in true_clauses:
+        clauses_main.clauses.remove(clause)
+    return clauses_main
