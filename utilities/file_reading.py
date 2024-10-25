@@ -5,9 +5,9 @@ def read_file(path):
     return cnf_file;
 
 
-def get_base_details(file):
+def get_base_details(lines):
 
-    for line in file:
+    for line in lines:
         if line.startswith("p"):
             cleaning = line.split()
             # Cleaning[2] = Number of variables
@@ -15,11 +15,11 @@ def get_base_details(file):
             return int(cleaning[2]), int(cleaning[3])
 
 
-def get_clauses(file):
+def get_clauses(lines):
 
     clauses = []
 
-    for line in file:
+    for line in lines:
         if line.strip().endswith("0"):
             cleaning = line.split()
             cleaning = [int(item) for item in cleaning]

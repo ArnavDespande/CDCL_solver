@@ -53,11 +53,8 @@ def get_singular_clauses(unresolved_clauses):
 def locate_contradiction(unresolved_clauses):
 
     singulars = get_singular_clauses(unresolved_clauses)
-    print("Comparing singulars:", singulars)
 
     for singular in singulars:
         if ([-int(singular[0])] in singulars):
-            print("Contradicting singular:", singular)
-            print()
             return (True, singular)
     return False

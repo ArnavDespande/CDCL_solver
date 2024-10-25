@@ -50,7 +50,7 @@ def random_value(clauses, vars):
     return random_value(clauses, vars)
 
 
-'''Use this function to check if you can further iterate; it returns a zero if you can't
+#Use this function to check if you can further iterate; it returns a zero if you can't
 def iterative_value(clauses, vars, previous_value=None):
 
     if (previous_value == None):
@@ -59,10 +59,9 @@ def iterative_value(clauses, vars, previous_value=None):
     if abs(previous_value)+1 > vars:
         return 0
 
-    for clause in clauses:
-        if (abs(previous_value)+1) in clause:
-            return abs(previous_value)+1
-        elif -(abs(previous_value)+1) in clause:
-            return -(abs(previous_value)+1)
+    for clause in clauses.clauses:
+        for value in clause.variables:
+            if (abs(previous_value)+1) == abs(value.tag):
+                return abs(previous_value)+1
 
-    return iterative_value(clauses, vars, abs(previous_value)+1)'''
+    return iterative_value(clauses, vars, abs(previous_value)+1)
