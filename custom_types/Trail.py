@@ -1,16 +1,12 @@
-import uuid
-
-
 class TrailNode:
-    def __init__ (self, value, reason, map_snapshot=None, predecessor=None):
+    def __init__ (self, value, reason, map_snapshot=None, predecessor=None, both_paths_killed=False, son_node=None, daughternode=None):
         self.value = value
         self.reason = reason
         self.map_snapshot = map_snapshot
         self.predecessor = predecessor
-        self.id = uuid.uuid4()
-
-    def affix(self, node):
-        node.predecessor = self
+        self.dead = both_paths_killed
+        self.son = son_node
+        self.daughter = daughternode
 
     def printNode(self):
         if (self.reason == "DECISION"):
