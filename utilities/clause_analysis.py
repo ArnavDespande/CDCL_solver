@@ -1,4 +1,4 @@
-def get_pure_literals(unresolved_clauses, vars):
+def get_pure_literals(unresolved_clauses, vars): #Returns a list of pure literals to eliminate
 
     pure_literals = []
 
@@ -23,7 +23,7 @@ def get_pure_literals(unresolved_clauses, vars):
     return pure_literals
 
 
-def get_tautological_clauses(unresolved_clauses):
+def get_tautological_clauses(unresolved_clauses): #Returns a list of tautological clauses to eliminate
 
     tautologies = []
 
@@ -39,7 +39,7 @@ def get_tautological_clauses(unresolved_clauses):
     return tautologies
 
 
-def get_singular_clauses(unresolved_clauses):
+def get_singular_clauses(unresolved_clauses): #Returns a list of singular clauses to eliminate
 
     singulars = []
 
@@ -50,11 +50,11 @@ def get_singular_clauses(unresolved_clauses):
     return singulars
 
 
-def locate_contradiction(unresolved_clauses):
+def locate_contradiction(unresolved_clauses): #See if we have a contradiction
 
     singulars = get_singular_clauses(unresolved_clauses)
 
     for singular in singulars:
-        if ([-int(singular[0])] in singulars):
+        if ([-int(singular[0])] in singulars): #If a negative version of a singular is in our list of singulars, return the value
             return (True, singular)
-    return False
+    return False #All good :)
