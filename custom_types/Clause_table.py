@@ -1,14 +1,14 @@
-class Value:
+class Value: 
     def __init__ (self, tag, value=None, assigned_status=False):
-        self.tag = tag
-        self.value = value
-        self.assigned_status = assigned_status
+        self.tag = tag #Tag is a number
+        self.value = value #Value is a boolean-value
+        self.assigned_status = assigned_status #Also a boolean, but for a different reason
 
 class Clause:
     def __init__ (self, vars):
-        self.variables = vars
+        self.variables = vars #A clause is a list of variables (of type Value)
 
-    def get_clause_value(self):
+    def get_clause_value(self): #Check if this clause has been made satisfiable
         unassigned_located = False
         for variable in self.variables:
             if (variable.assigned_status):
@@ -26,10 +26,10 @@ class Clause:
         print()
 
 class Clause_Table:
-    def __init__ (self, clauses):
+    def __init__ (self):
         self.clauses = []
 
-    def add_clause(self, clause):
+    def add_clause(self, clause): #Add a clause to this table
         self.clauses.append(clause)
 
     def print_table(self):
@@ -38,8 +38,8 @@ class Clause_Table:
                 print(var.tag , " ", var.value, " ", end="")
             print()
 
-def setup_table(clauses):
-    setup = Clause_Table([])
+def setup_table(clauses): #Initialize a giant table of clauses, default values = None, all unassigned
+    setup = Clause_Table()
 
     for clause in clauses:
         valued_clause = []
