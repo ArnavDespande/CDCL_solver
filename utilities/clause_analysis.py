@@ -5,7 +5,7 @@ def get_blocked_clauses(unresolved_clauses): #Returns a tuple pair of blocked cl
             for value in clause:
                 if -value in secondary_clause:
                     for next_value in secondary_clause:
-                        if -next_value in clause:
+                        if -next_value in clause and abs(value) != abs(next_value):
                             if (len(clause) > len(secondary_clause)):
                                 return (clause, secondary_clause)
                             return (secondary_clause, clause)
