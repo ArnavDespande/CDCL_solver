@@ -1,6 +1,16 @@
 from utilities.clause_analysis import * 
 
 
+def recursive_blockage_remover(clauses):
+
+    blockages = get_blocked_clauses(clauses)
+
+    if (blockages != None):
+        clauses.remove(blockages[0])
+        return recursive_blockage_remover(clauses)
+    return clauses
+
+
 def recursive_contradiction_optimizer(clauses):
 
     singulars = get_singular_clauses(clauses)
