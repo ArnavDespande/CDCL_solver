@@ -29,7 +29,8 @@ def main():
     vars = get_base_details(lines)[0]
     clauses = get_clauses(lines)
     preoptimized_clauses = pre_optimizer(clauses, vars)
-    pre_DPLL_clauses = recursive_contradiction_optimizer(preoptimized_clauses)
+    pre_blocked_clauses = recursive_contradiction_optimizer(preoptimized_clauses)
+    pre_DPLL_clauses = recursive_blockage_remover(pre_blocked_clauses)
 
     if (pre_DPLL_clauses != "UNSATISFIABLE" and pre_DPLL_clauses != "SATISFIABLE"):
         table_map = setup_table(pre_DPLL_clauses)
