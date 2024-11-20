@@ -1,3 +1,17 @@
+def get_blocked_clauses(unresolved_clauses): #Returns a tuple pair of blocked clauses; largest first
+
+    for clause in unresolved_clauses:
+        for secondary_clause in unresolved_clauses:
+            for value in clause:
+                if -value in secondary_clause:
+                    for next_value in secondary_clause:
+                        if -next_value in clause:
+                            if (len(clause) > len(secondary_clause)):
+                                return (clause, secondary_clause)
+                            return (secondary_clause, clause)
+
+    return None
+
 def get_pure_literals(unresolved_clauses, vars): #Returns a list of pure literals to eliminate
 
     pure_literals = []
