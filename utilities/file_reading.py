@@ -19,7 +19,7 @@ def get_clauses(lines): #Get all clauses [this is a list of list of ints]
     clauses = []
 
     for line in lines:
-        if line.strip().endswith("0"):
+        if line.strip().endswith(" 0") and not line.strip().startswith("c"):
             cleaning = line.split()
             cleaning = [int(item) for item in cleaning]
             clauses.append(cleaning[:-1])
