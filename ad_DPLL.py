@@ -3,15 +3,14 @@ from solvers.preoptimizer import *
 from solvers.DPLL_algorithm import *
 from custom_types.Clause_table import *
 '''
-cnf_file = read_file(path)
+cnf_file = read_file("path")
 
 details = get_base_details(cnf_file)
 vars = details[0]
 
 clauses = get_clauses(cnf_file)
 
-preoptimized_clauses = pre_optimizer(clauses, vars)
-pre_DPLL_clauses = recursive_contradiction_optimizer(preoptimized_clauses)
+pre_DPLL_clauses = recursive_blockage_remover(recursive_contradiction_optimizer(pre_optimizer(clauses, vars)))
 
 if (pre_DPLL_clauses != "UNSATISFIABLE" and pre_DPLL_clauses != "SATISFIABLE"):
 
