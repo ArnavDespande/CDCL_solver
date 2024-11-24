@@ -1,4 +1,4 @@
-#DPLL SAT-solver
+# DPLL SAT-solver
 
 Name - DPLL SAT-solver
 
