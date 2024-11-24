@@ -11,4 +11,4 @@ Windows machines with python can run it by running: cat <CNF_file>.cnf | python 
 
 Evaluation directories simple_out, medium_out, hard_out can be found in the "evaluation" folder.
 
-I consent to having my solver and name be included in the evaluation page on Blackboard.
+I consent to having my solver and name be included in the evaluation page.
