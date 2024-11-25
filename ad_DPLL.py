@@ -34,13 +34,13 @@ def main():
     if (pre_DPLL_clauses != "UNSATISFIABLE" and pre_DPLL_clauses != "SATISFIABLE"):
         pre_DPLL_clauses = recursive_blockage_remover(pre_DPLL_clauses)
 
-    if (pre_DPLL_clauses != "UNSATISFIABLE" and pre_DPLL_clauses != "SATISFIABLE"):
+    if (pre_DPLL_clauses != "SATISFIABLE"):
         table_map = setup_table(pre_DPLL_clauses)
         result_event = threading.Event()
         result = [None] 
 
         def solver_thread():
-            result[0] = solver(table_map, 1)
+            result[0] = solver(table_map, 0)
             result_event.set()
         thread = threading.Thread(target=solver_thread)
         thread.start()
