@@ -17,7 +17,7 @@ pre_DPLL_clauses = recursive_blockage_remover(recursive_contradiction_optimizer(
 if (pre_DPLL_clauses != "UNSATISFIABLE" and pre_DPLL_clauses != "SATISFIABLE"):
 
     table_map = setup_table(pre_DPLL_clauses)
-    final = solver(table_map, 1)
+    final = solver(table_map, 0)
     if (final):
         print("SATISFIABLE")
     else:
