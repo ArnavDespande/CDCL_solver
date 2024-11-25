@@ -8,7 +8,9 @@ def recursive_blockage_remover(clauses):
     if (blockages != None):
         clauses.remove(blockages[0])
         return recursive_blockage_remover(clauses)
-    return clauses
+    if len(clauses) > 0:
+        return clauses
+    return "SATISFIABLE"
 
 
 def recursive_contradiction_optimizer(clauses):
