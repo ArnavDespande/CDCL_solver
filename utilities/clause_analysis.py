@@ -1,14 +1,27 @@
 def get_blocked_clauses(unresolved_clauses): #Returns a tuple pair of blocked clauses; largest first
 
+    # https://users.aalto.fi/~tjunttil/2021-DP-AUT/notes-sat/preprocessing.html#blocked-clause-elimination
+
+    not_blocked = False
+
     for clause in unresolved_clauses:
         for secondary_clause in unresolved_clauses:
+
             for value in clause:
                 if -value in secondary_clause:
-                    for next_value in secondary_clause:
-                        if -next_value in clause and abs(value) != abs(next_value):
-                            if (len(clause) > len(secondary_clause)):
+                    for contra_value in secondary_clause:
+                        if -contra_value in clause:
+
+                            for other_clause in unresolved_clauses:
+                                if unresolved_clauses.index(other_clause) != unresolved_clauses.index(clause) and unresolved_clauses.index(other_clause) != unresolved_clauses.index(secondary_clause):
+                                    if value in other_clause:
+                                        not_blocked = True
+                                    if -value in other_clause:
+                                        if not (contra_value in other_clause):
+                                            not_blocked = True
+
+                            if not not_blocked:
                                 return (clause, secondary_clause)
-                            return (secondary_clause, clause)
 
     return None
 
