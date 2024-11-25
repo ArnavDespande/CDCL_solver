@@ -10,7 +10,7 @@ This can be run on a Linux machine with python installed: cat <CNF_file>.cnf | .
 
 If permission is denied to run it, then grant the script permission through: chmod +x run_ad_DPLL.sh and try again
 
-Individual files can be tested by running: cat <CNF_file>.cnf | python ad_DPLL.py (Windows) or cat <CNF_file>.cnf | ./run_ad_DPLL.sh (Linux)
+This can be run on Windows by running: cat <CNF_file>.cnf | python ad_DPLL.py
 
 Evaluation directories simple_out, medium_out, hard_out can be found in the "Evaluation" folder.
 
